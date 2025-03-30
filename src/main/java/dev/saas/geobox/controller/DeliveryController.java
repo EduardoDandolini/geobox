@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/delivery")
@@ -19,5 +21,10 @@ public class DeliveryController {
     public ResponseEntity<DeliveryResponse> save(@RequestBody DeliveryRequest request) {
         Delivery savedDelivery = deliveryService.save(request.latitude(), request.longitude());
         return ResponseEntity.ok(DeliveryResponse.fromEntity(savedDelivery));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<DeliveryResponse>> findAllLocations() {
+        return ResponseEntity.ok(deliveryService.findAllLocations());
     }
 }

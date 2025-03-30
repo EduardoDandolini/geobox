@@ -40,69 +40,94 @@
 
     // Obtém a localização atual do usuário
     function getUserLocation() {
-    if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(
-            position => {
-                let lat = position.coords.latitude;
-                let lng = position.coords.longitude;
-                let accuracy = position.coords.accuracy; // Precisão em metros
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(
+                position => {
+                    let lat = position.coords.latitude;
+                    let lng = position.coords.longitude;
+                    let accuracy = position.coords.accuracy; // Precisão em metros
 
-                // Remove o marcador anterior, se existir
-                if (currentMarker) {
-                    map.removeLayer(currentMarker);
+                    // Remove o marcador anterior, se existir
+                    if (currentMarker) {
+                        map.removeLayer(currentMarker);
+                    }
+
+                    // Adiciona o novo marcador
+                    currentMarker = L.marker([lat, lng]).addTo(map)
+                        .bindPopup(`Minha Localização (Precisão: ${accuracy.toFixed(2)}m)`)
+                        .openPopup();
+
+                    map.setView([lat, lng], 15);
+                },
+                error => {
+                    alert("Erro ao obter localização: " + error.message);
+                },
+                {
+                    enableHighAccuracy: true, // Solicita a melhor precisão possível
+                    timeout: 10000, // Tempo máximo de espera (10s)
+                    maximumAge: 0 // Não usar cache, pegar sempre localização nova
                 }
-
-                // Adiciona o novo marcador
-                currentMarker = L.marker([lat, lng]).addTo(map)
-                    .bindPopup(`Minha Localização (Precisão: ${accuracy.toFixed(2)}m)`)
-                    .openPopup();
-
-                map.setView([lat, lng], 15);
-            },
-            error => {
-                alert("Erro ao obter localização: " + error.message);
-            },
-            {
-                enableHighAccuracy: true, // Solicita a melhor precisão possível
-                timeout: 10000, // Tempo máximo de espera (10s)
-                maximumAge: 0 // Não usar cache, pegar sempre localização nova
-            }
-        );
-    } else {
-        alert("Geolocalização não suportada no navegador.");
+            );
+        } else {
+            alert("Geolocalização não suportada no navegador.");
+        }
     }
-}
-
 
     // Captura a localização assim que a página carrega
     getUserLocation();
 
     // Salvar a localização no back-end
     document.getElementById('saveButton').addEventListener('click', function() {
-    if (currentMarker) {
-        let lat = currentMarker.getLatLng().lat;
-        let lng = currentMarker.getLatLng().lng;
+        if (currentMarker) {
+            let lat = currentMarker.getLatLng().lat;
+            let lng = currentMarker.getLatLng().lng;
 
-        fetch('/delivery', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ latitude: lat, longitude: lng })
-        })
-        .then(response => response.json())
-        .then(data => {
-            alert('Localização salva com sucesso!');
-            console.log(data);
-        })
-        .catch(error => {
-            alert('Erro ao salvar a localização!');
-            console.error(error);
-        });
-    } else {
-        alert("Nenhuma localização para salvar!");
+            fetch('/delivery', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ latitude: lat, longitude: lng })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('Localização salva com sucesso!');
+                console.log(data);
+            })
+            .catch(error => {
+                alert('Erro ao salvar a localização!');
+                console.error(error);
+            });
+        } else {
+            alert("Nenhuma localização para salvar!");
+        }
+    });
+
+    // Ícone customizado para locais salvos
+    let checkedIcon = L.icon({
+        iconUrl: 'https://cdn-icons-png.flaticon.com/512/190/190411.png', // URL corrigida
+        iconSize: [32, 32], // Tamanho do ícone
+        iconAnchor: [16, 32], // Ponto de ancoragem
+        popupAnchor: [0, -32] // Ajuste da posição do popup
+    });
+
+    // Função para carregar localizações salvas e exibir no mapa
+    function loadSavedLocations() {
+        fetch('/delivery')
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(location => {
+                    L.marker([location.latitude, location.longitude], { icon: checkedIcon }).addTo(map)
+                        .bindPopup("Localização salva")
+                        .openPopup();
+                });
+            })
+            .catch(error => console.error("Erro ao carregar localizações:", error));
     }
-});
+
+    // Carregar localizações salvas ao iniciar a página
+    loadSavedLocations();
+
 </script>
 
 </body>
