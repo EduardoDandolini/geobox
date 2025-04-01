@@ -1,4 +1,4 @@
 package dev.saas.geobox.dto;
 
-public record DeliveryRequest(Double latitude, Double longitude) {
+public record DeliveryRequest(Double latitude, Double longitude, Long truckId) {
 }

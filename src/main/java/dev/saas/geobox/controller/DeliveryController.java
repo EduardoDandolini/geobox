@@ -19,7 +19,7 @@ public class DeliveryController {
 
     @PostMapping
     public ResponseEntity<DeliveryResponse> save(@RequestBody DeliveryRequest request) {
-        Delivery savedDelivery = deliveryService.save(request.latitude(), request.longitude());
+        Delivery savedDelivery = deliveryService.save(request);
         return ResponseEntity.ok(DeliveryResponse.fromEntity(savedDelivery));
     }
 

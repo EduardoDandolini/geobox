@@ -1,9 +1,9 @@
 package dev.saas.geobox.service;
 
-import dev.saas.geobox.dto.LoginDTO;
+import dev.saas.geobox.dto.LoginRequest;
 
 public interface LoginService {
 
-    boolean login(LoginDTO dto);
+    boolean login(LoginRequest dto);
 
 }
