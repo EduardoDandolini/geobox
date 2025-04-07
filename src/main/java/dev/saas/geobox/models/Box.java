@@ -4,21 +4,17 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import lombok.*;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode(callSuper = true)
 @Entity
-public class Truck extends BaseEntity{
+public class Box extends BaseEntity {
 
-    private String plate;
+    private String boxNumber;
 
-    private String truckType;
-
-    @OneToMany(mappedBy = "truck")
-    private List<Delivery> delivery;
+    @OneToMany(mappedBy = "box")
+    private Delivery delivery;
 
 }

@@ -21,4 +21,8 @@ public class Delivery extends BaseEntity {
     @JoinColumn(name = "truck_id")
     private Truck truck;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "box_id")
+    private Box box;
+
 }
