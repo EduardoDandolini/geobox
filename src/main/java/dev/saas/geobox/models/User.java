@@ -1,8 +1,11 @@
 package dev.saas.geobox.models;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.*;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -17,5 +20,8 @@ public class User extends BaseEntity{
     private String email;
     private String password;
     private Long role;
+
+    @OneToMany(mappedBy = "user")
+    private List<Delivery> delivery;
 
 }

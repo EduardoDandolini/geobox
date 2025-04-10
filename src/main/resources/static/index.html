@@ -82,7 +82,7 @@
             let lat = currentMarker.getLatLng().lat;
             let lng = currentMarker.getLatLng().lng;
 
-            fetch('/delivery', {
+            fetch('/api/v1/delivery', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

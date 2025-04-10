@@ -2,8 +2,8 @@ package dev.saas.geobox.service;
 
 import dev.saas.geobox.dto.TruckRequest;
 import dev.saas.geobox.dto.TruckResponse;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface TruckService {
 
@@ -11,9 +11,9 @@ public interface TruckService {
 
     TruckResponse findById(Long id);
 
-    List<TruckResponse> findAllTrucks();
+    Page<TruckResponse> findAllTrucks(Pageable pageable);
 
     TruckResponse update(Long id, TruckRequest request);
 
-    TruckResponse delete(Long id);
+    void delete(Long id);
 }

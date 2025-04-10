@@ -8,10 +8,9 @@ import dev.saas.geobox.models.Box;
 import dev.saas.geobox.repository.BoxRepository;
 import dev.saas.geobox.service.BoxService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,10 +33,9 @@ public class BoxServiceImpl implements BoxService {
     }
 
     @Override
-    public List<BoxResponse> findAllBoxes() {
-        return boxRepository.findAll().stream()
-                .map(BoxMapper::toResponse)
-                .collect(Collectors.toList());
+    public Page<BoxResponse> findAllBoxes(Pageable pageable) {
+        return boxRepository.findAll(pageable)
+                .map(BoxMapper::toResponse);
     }
 
     @Override

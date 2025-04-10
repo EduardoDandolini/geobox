@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import lombok.*;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,6 +17,6 @@ public class Box extends BaseEntity {
     private String boxNumber;
 
     @OneToMany(mappedBy = "box")
-    private Delivery delivery;
+    private List<Delivery> delivery;
 
 }

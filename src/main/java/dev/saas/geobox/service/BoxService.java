@@ -2,8 +2,8 @@ package dev.saas.geobox.service;
 
 import dev.saas.geobox.dto.BoxRequest;
 import dev.saas.geobox.dto.BoxResponse;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface BoxService {
 
@@ -11,7 +11,7 @@ public interface BoxService {
 
     BoxResponse findById(Long id);
 
-    List<BoxResponse> findAllBoxes();
+    Page<BoxResponse> findAllBoxes(Pageable pageable);
 
     BoxResponse update(Long id, BoxRequest request);
 
