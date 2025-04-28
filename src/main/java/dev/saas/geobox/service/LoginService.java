@@ -1,9 +1,10 @@
 package dev.saas.geobox.service;
 
 import dev.saas.geobox.dto.LoginRequest;
+import dev.saas.geobox.dto.TokenResponse;
 
 public interface LoginService {
 
-    boolean login(LoginRequest dto);
+    TokenResponse login(LoginRequest dto) throws Exception;
 
 }

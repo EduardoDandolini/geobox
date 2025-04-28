@@ -6,12 +6,10 @@ import dev.saas.geobox.service.TruckService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/truck")
@@ -29,8 +27,8 @@ public class TruckController {
 
     @GetMapping
     @Operation(summary = "Listar caminhões", description = "Retorna a lista de todos os caminhões cadastrados")
-    public ResponseEntity<Page<TruckResponse>> findAllTrucks(@PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-        return ResponseEntity.ok(truckService.findAllTrucks(pageable));
+    public ResponseEntity<List<TruckResponse>> findAllTrucks() {
+        return ResponseEntity.ok(truckService.findAllTrucks());
     }
 
     @GetMapping("/{id}")

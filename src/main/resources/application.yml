@@ -22,3 +22,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+jwt:
+  key: BI13LQPTvVnqkp81q79aQigMqCBpKSXaFSfeJzxQu81jO0ARnD63IsEyrgflgK8Ga23RjYbOVF12ZXFmhiMFlg==
+  expiration-time: 86400000
