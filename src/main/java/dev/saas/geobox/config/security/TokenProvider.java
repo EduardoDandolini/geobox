@@ -42,7 +42,7 @@ public class TokenProvider {
         final User user = getUsuario(authentication);
 
         final String auth = Jwts.builder()
-                .setIssuer("WEB Token")
+                .setIssuer("GeoBox WEB Token")
                 .setSubject(user.toString())
                 .setIssuedAt(now)
                 .setNotBefore(now)
@@ -54,6 +54,7 @@ public class TokenProvider {
                 .token(auth)
                 .expiresIn(expirationInMillis)
                 .username(user.getUsername())
+                .userId(user.getId())
                 .build();
     }
 

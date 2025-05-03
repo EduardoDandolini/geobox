@@ -3,6 +3,7 @@ package dev.saas.geobox.service.impl;
 import dev.saas.geobox.dto.DeliveryRequest;
 import dev.saas.geobox.dto.DeliveryResponse;
 import dev.saas.geobox.exception.NotFoundException;
+import dev.saas.geobox.mapper.DeliveryMapper;
 import dev.saas.geobox.models.Box;
 import dev.saas.geobox.models.Delivery;
 import dev.saas.geobox.models.Truck;
@@ -48,9 +49,7 @@ public class DeliveryServiceImpl implements DeliveryService {
     @Override
     public List<DeliveryResponse> findAllLocations() {
         return repository.findAll().stream()
-                .map(delivery -> new DeliveryResponse(
-                        delivery.getLocation().getY(),
-                        delivery.getLocation().getX()
-                )).collect(Collectors.toList());
+                .map(DeliveryMapper::toResponse)
+                .collect(Collectors.toList());
     }
 }
