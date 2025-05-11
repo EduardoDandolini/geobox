@@ -19,14 +19,17 @@ public class Delivery extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "truck_id")
+    @ToString.Exclude
     private Truck truck;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "box_id")
+    @ToString.Exclude
     private Box box;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @ToString.Exclude
     private User user;
 
 }

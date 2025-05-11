@@ -19,6 +19,7 @@ public class Truck extends BaseEntity{
     private String truckType;
 
     @OneToMany(mappedBy = "truck")
+    @ToString.Exclude
     private List<Delivery> delivery;
 
 }

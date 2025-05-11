@@ -17,6 +17,7 @@ public class Box extends BaseEntity {
     private String boxNumber;
 
     @OneToMany(mappedBy = "box")
+    @ToString.Exclude
     private List<Delivery> delivery;
 
 }

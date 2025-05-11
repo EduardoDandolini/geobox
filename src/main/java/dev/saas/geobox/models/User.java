@@ -25,9 +25,11 @@ public class User extends BaseEntity implements UserDetails {
     @JoinTable(name = "tb_users_roles",
             joinColumns = @JoinColumn(name = "user_identifier"),
             inverseJoinColumns = @JoinColumn(name = "role_identifier"))
+    @ToString.Exclude
     private List<Roles> roles;
 
     @OneToMany(mappedBy = "user")
+    @ToString.Exclude
     private List<Delivery> delivery;
 
     @Override
