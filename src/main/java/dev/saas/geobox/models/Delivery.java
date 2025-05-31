@@ -32,4 +32,6 @@ public class Delivery extends BaseEntity {
     @ToString.Exclude
     private User user;
 
+    private Long status;
+
 }

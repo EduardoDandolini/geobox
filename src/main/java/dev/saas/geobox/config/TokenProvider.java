@@ -1,4 +1,4 @@
-package dev.saas.geobox.config.security;
+package dev.saas.geobox.config;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

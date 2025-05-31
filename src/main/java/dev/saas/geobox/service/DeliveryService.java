@@ -3,6 +3,7 @@ package dev.saas.geobox.service;
 
 import dev.saas.geobox.dto.DeliveryRequest;
 import dev.saas.geobox.dto.DeliveryResponse;
+import dev.saas.geobox.dto.WithdrawalRequest;
 import dev.saas.geobox.models.Delivery;
 
 import java.util.List;
@@ -14,4 +15,8 @@ public interface DeliveryService {
     List<DeliveryResponse> findAllLocations();
 
     Delivery findDeliveryById(Long id);
+
+    void withdrawal(WithdrawalRequest request);
+
+    byte[]  generateSheet();
 }

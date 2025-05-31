@@ -1,6 +1,6 @@
 package dev.saas.geobox.service.impl;
 
-import dev.saas.geobox.config.security.TokenProvider;
+import dev.saas.geobox.config.TokenProvider;
 import dev.saas.geobox.dto.LoginRequest;
 import dev.saas.geobox.dto.TokenResponse;
 import dev.saas.geobox.service.LoginService;

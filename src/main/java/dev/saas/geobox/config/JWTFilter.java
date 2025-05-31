@@ -1,4 +1,4 @@
-package dev.saas.geobox.config.security;
+package dev.saas.geobox.config;
 
 import dev.saas.geobox.models.User;
 import jakarta.servlet.FilterChain;
