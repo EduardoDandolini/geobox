@@ -4,14 +4,14 @@ spring:
 
   security:
     user:
-      name: admin
-      password: admin
+      name: ${APP_USER_NAME}
+      password: ${APP_USER_PASSWORD}
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
+    url: ${DB_URL}
     driver-class-name: org.postgresql.Driver
-    username: postgres
-    password: 123
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
 
   jpa:
     database: postgresql
@@ -23,6 +23,21 @@ spring:
       hibernate:
         format_sql: true
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
 jwt:
-  key: BI13LQPTvVnqkp81q79aQigMqCBpKSXaFSfeJzxQu81jO0ARnD63IsEyrgflgK8Ga23RjYbOVF12ZXFmhiMFlg==
-  expiration-time: 86400000
+  key: ${JWT_SECRET}
+  expiration-time: ${JWT_EXPIRATION}
+
+server:
+  address: 0.0.0.0

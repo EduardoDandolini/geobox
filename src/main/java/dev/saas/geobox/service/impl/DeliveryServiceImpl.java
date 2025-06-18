@@ -164,7 +164,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(url)
-                .header("User-Agent", "Geobox/1.0") // Nominatim requer um User-Agent
+                .header("User-Agent", "Geobox/1.0")
                 .build();
 
         try (Response response = client.newCall(request).execute()) {

@@ -26,7 +26,6 @@ public class LoginServiceImpl implements LoginService {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.email(), request.password())
             );
-            session.setAttribute("user", authentication.getPrincipal());
             return tokenProvider.generateToken(authentication);
         } catch (AuthenticationException e) {
             throw new Exception("Credenciais inválidas: " + e.getMessage());

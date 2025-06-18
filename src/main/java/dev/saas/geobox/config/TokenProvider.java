@@ -55,6 +55,7 @@ public class TokenProvider {
                 .expiresIn(expirationInMillis)
                 .username(user.getUsername())
                 .userId(user.getId())
+               // .role(user.getRoles().get(0).get)
                 .build();
     }
 
