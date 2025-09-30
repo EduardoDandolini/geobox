@@ -1,97 +1,92 @@
 package dev.saas.geobox.config;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nimbusds.jose.JWSVerifier;
-import com.nimbusds.jose.crypto.MACVerifier;
-import com.nimbusds.jwt.SignedJWT;
-import dev.saas.geobox.dto.TokenResponse;
-import dev.saas.geobox.models.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import jakarta.servlet.ServletResponse;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class TokenProvider {
 
-    private static final int UNAUTHORIZED = 401;
     private final ObjectMapper objectMapper;
+
     @Value("${jwt.key}")
     private String jwtKey;
+
     @Value("${jwt.expiration-time}")
-    private Integer expirationTime;
+    private Long expirationTime;
 
-    public TokenResponse generateToken(Authentication authentication) {
-        final Date now = new Date();
-        long expirationInMillis = expirationTime.longValue();
-        Date expirationDate = new Date(System.currentTimeMillis() + expirationInMillis);
+    public String generateToken(Authentication authentication) {
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + expirationTime);
 
-        final User user = getUsuario(authentication);
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
-        final String auth = Jwts.builder()
-                .setIssuer("GeoBox WEB Token")
-                .setSubject(user.toString())
+        return Jwts.builder()
+                .setSubject(userDetails.getUsername())
+                .claim("authorities", userDetails.getAuthorities())
                 .setIssuedAt(now)
-                .setNotBefore(now)
-                .setExpiration(expirationDate)
-                .signWith(SignatureAlgorithm.HS256, jwtKey.getBytes(StandardCharsets.UTF_8))
+                .setExpiration(expiryDate)
+                .signWith(SignatureAlgorithm.HS512, jwtKey.getBytes(StandardCharsets.UTF_8))
                 .compact();
-
-        return TokenResponse.builder()
-                .token(auth)
-                .expiresIn(expirationInMillis)
-                .username(user.getUsername())
-                .userId(user.getId())
-               // .role(user.getRoles().get(0).get)
-                .build();
     }
 
-    public boolean isValid(String jwt, ServletResponse response) throws IOException {
+    public boolean validateToken(String token) {
         try {
-            jwt = extractToken(jwt);
-            SignedJWT signedJWT = SignedJWT.parse(jwt);
-            JWSVerifier verifier = new MACVerifier(jwtKey.getBytes(StandardCharsets.UTF_8));
-            if (!signedJWT.verify(verifier)) {
-                log.error("Assinatura inválida!");
-                ((HttpServletResponse) response).sendError(UNAUTHORIZED);
-                return false;
-            }
-            Jwts.parser().setSigningKey(jwtKey.getBytes(StandardCharsets.UTF_8)).parseClaimsJws(jwt);
+            Jwts.parser()
+                    .setSigningKey(jwtKey.getBytes(StandardCharsets.UTF_8))
+                    .parseClaimsJws(extractToken(token));
             return true;
-        }catch (Exception e) {
-            log.error("Token inválido: {}", e.getMessage());
-            ((HttpServletResponse) response).sendError(UNAUTHORIZED);
+        } catch (Exception ex) {
+            log.error("Token validation error: {}", ex.getMessage());
             return false;
         }
     }
 
-    public User getUserFromToken(String jwt) throws JsonProcessingException {
-        jwt = extractToken(jwt);
-        Claims claims = Jwts.parser().setSigningKey(jwtKey.getBytes(StandardCharsets.UTF_8)).parseClaimsJws(jwt).getBody();
-        return objectMapper.readValue(claims.getSubject(), User.class);
+    public String getUsernameFromToken(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(jwtKey.getBytes(StandardCharsets.UTF_8))
+                .parseClaimsJws(extractToken(token))
+                .getBody();
+
+        return claims.getSubject();
     }
 
-    public User getUsuario(Authentication authentication) {
-        return (User) authentication.getPrincipal();
+    @SuppressWarnings("unchecked")
+    public Collection<? extends GrantedAuthority> getAuthoritiesFromToken(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(jwtKey.getBytes(StandardCharsets.UTF_8))
+                .parseClaimsJws(extractToken(token))
+                .getBody();
+
+        List<Map<String, String>> authorities = claims.get("authorities", List.class);
+
+        return authorities.stream()
+                .map(auth -> new SimpleGrantedAuthority(auth.get("authority")))
+                .collect(Collectors.toList());
     }
 
-    private String extractToken(String authToken) {
-        if (authToken.toLowerCase().startsWith("bearer")) {
-            return authToken.substring("bearer ".length());
+    private String extractToken(String token) {
+        if (token != null && token.startsWith("Bearer ")) {
+            return token.substring(7);
         }
-        return authToken;
+        return token;
     }
 }
