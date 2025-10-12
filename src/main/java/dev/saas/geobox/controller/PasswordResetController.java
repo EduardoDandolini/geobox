@@ -18,7 +18,7 @@ public class PasswordResetController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/reset")
+    @PostMapping("/reset/{token}")
     public ResponseEntity<Void> resetPassword(@PathVariable String token, @RequestParam String novaSenha) {
         passwordResetService.resetPassword(token, novaSenha);
         return ResponseEntity.ok().build();
